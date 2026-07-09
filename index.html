@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYYAN BAIG MIRZA // CYBER GUARDIAN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan: #00fff5;
+    --magenta: #ff00a0;
+    --yellow: #f5ff00;
+    --dark: #020810;
+    --darker: #010508;
+    --mid: #041020;
+    --grid: rgba(0,255,245,0.04);
+    --glow-cyan: 0 0 10px #00fff5, 0 0 30px rgba(0,255,245,0.4);
+    --glow-mag: 0 0 10px #ff00a0, 0 0 30px rgba(255,0,160,0.4);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: #c8e8f0;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  #cursor {
+    position: fixed; width: 12px; height: 12px;
+    border: 2px solid var(--cyan); border-radius: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.05s;
+    mix-blend-mode: difference;
+  }
+  #cursor-trail {
+    position: fixed; width: 40px; height: 40px;
+    border: 1px solid rgba(0,255,245,0.3);
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+  }
+
+  /* ── SCANLINES OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none; z-index: 1000;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  .noise {
+    position: fixed; inset: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none; z-index: 1;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 16px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(2,8,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,255,245,0.15);
+    z-index: 500;
+  }
+
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900; font-size: 1rem;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    text-shadow: var(--glow-cyan);
+  }
+  .nav-logo span { color: var(--magenta); }
+
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 2px;
+    color: rgba(200,232,240,0.6);
+    text-decoration: none; text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute;
+    bottom: -4px; left: 0; right: 0; height: 1px;
+    background: var(--cyan);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 48px 60px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(80px, 15vw, 220px);
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,255,245,0.05);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    user-select: none; pointer-events: none;
+    letter-spacing: -5px;
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift {
+    0% { transform: translate(-50%,-50%) translateX(-2%); }
+    100% { transform: translate(-50%,-50%) translateX(2%); }
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+
+  .hero-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 4px;
+    color: var(--magenta);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-tag::before {
+    content: ''; display: block;
+    width: 40px; height: 1px;
+    background: var(--magenta);
+    box-shadow: var(--glow-mag);
+  }
+
+  .hero-name {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+
+  .hero-name .first { color: #fff; }
+  .hero-name .last {
+    color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+    display: block;
+  }
+
+  .hero-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+    color: rgba(200,232,240,0.5);
+    letter-spacing: 3px;
+    margin: 20px 0 40px;
+  }
+
+  /* Glitch effect */
+  .glitch {
+    position: relative;
+  }
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+  .glitch::before {
+    color: var(--magenta);
+    animation: glitch1 3s infinite;
+    clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+  }
+  .glitch::after {
+    color: var(--cyan);
+    animation: glitch2 3s infinite;
+    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+  }
+  @keyframes glitch1 {
+    0%,90%,100% { transform: translate(0); opacity: 0; }
+    91% { transform: translate(-3px, 1px); opacity: 0.8; }
+    93% { transform: translate(3px, -1px); opacity: 0.8; }
+    95% { transform: translate(0); opacity: 0; }
+  }
+  @keyframes glitch2 {
+    0%,88%,100% { transform: translate(0); opacity: 0; }
+    89% { transform: translate(3px, 2px); opacity: 0.7; }
+    91% { transform: translate(-2px, -1px); opacity: 0.7; }
+    93% { transform: translate(0); opacity: 0; }
+  }
+
+  /* Terminal typewriter */
+  .terminal-line {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--cyan);
+    background: rgba(0,255,245,0.04);
+    border: 1px solid rgba(0,255,245,0.2);
+    padding: 16px 20px;
+    margin-bottom: 40px;
+    max-width: 560px;
+    position: relative;
+  }
+  .terminal-line::before {
+    content: '> ';
+    color: var(--magenta);
+  }
+  .terminal-cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--cyan);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem; letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: all 0.25s;
+    position: relative; overflow: hidden;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--cyan);
+    color: var(--dark);
+    border: 1px solid var(--cyan);
+    font-weight: 700;
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--magenta);
+    border: 1px solid var(--magenta);
+  }
+  .btn-ghost:hover {
+    background: var(--magenta);
+    color: var(--dark);
+    box-shadow: var(--glow-mag);
+  }
+
+  /* Floating side stats */
+  .hero-stats {
+    position: absolute;
+    right: 48px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 24px;
+    z-index: 2;
+  }
+  .stat-item {
+    text-align: right;
+    border-right: 2px solid rgba(0,255,245,0.3);
+    padding-right: 16px;
+  }
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.8rem; font-weight: 900;
+    color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 2px;
+    color: rgba(200,232,240,0.4);
+    text-transform: uppercase;
+  }
+
+  /* Corner decorations */
+  .corner {
+    position: absolute;
+    width: 40px; height: 40px;
+  }
+  .corner-tl { top: 24px; left: 24px; border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
+  .corner-br { bottom: 24px; right: 24px; border-bottom: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
+
+  /* ── SECTION BASE ── */
+  section {
+    padding: 100px 48px;
+    position: relative; z-index: 2;
+  }
+
+  .section-header {
+    margin-bottom: 64px;
+  }
+
+  .section-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 4px;
+    color: var(--magenta);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-tag::before {
+    content: attr(data-num);
+    display: block;
+    color: rgba(255,0,160,0.4);
+    font-size: 0.65rem;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+  .section-title span { color: var(--cyan); }
+
+  .section-line {
+    width: 60px; height: 2px;
+    background: var(--cyan);
+    box-shadow: var(--glow-cyan);
+    margin-top: 16px;
+  }
+
+  /* ── ABOUT ── */
+  #about { background: var(--darker); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 1.1rem; line-height: 1.8;
+    color: rgba(200,232,240,0.75);
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  .about-text p strong {
+    color: var(--cyan);
+    font-weight: 600;
+  }
+
+  .cert-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .cert-item {
+    border: 1px solid rgba(0,255,245,0.15);
+    padding: 14px 16px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(200,232,240,0.7);
+    letter-spacing: 1px;
+    position: relative;
+    transition: all 0.25s;
+    background: rgba(0,255,245,0.02);
+  }
+  .cert-item::before {
+    content: '✓';
+    color: var(--cyan);
+    margin-right: 8px;
+    font-size: 0.8rem;
+  }
+  .cert-item:hover {
+    border-color: var(--cyan);
+    background: rgba(0,255,245,0.06);
+    color: var(--cyan);
+  }
+
+  /* ── SKILLS ── */
+  #skills { background: var(--dark); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .skill-card {
+    border: 1px solid rgba(0,255,245,0.1);
+    padding: 28px;
+    background: rgba(0,255,245,0.02);
+    position: relative;
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--cyan);
+    transform: scaleY(0); transform-origin: top;
+    transition: transform 0.3s;
+  }
+  .skill-card:hover::before { transform: scaleY(1); }
+  .skill-card:hover {
+    border-color: rgba(0,255,245,0.3);
+    background: rgba(0,255,245,0.05);
+    transform: translateY(-4px);
+  }
+
+  .skill-card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .skill-card-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem; font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 1px;
+    padding: 5px 10px;
+    border: 1px solid rgba(200,232,240,0.15);
+    color: rgba(200,232,240,0.6);
+    transition: all 0.2s;
+  }
+  .tag:hover {
+    border-color: var(--magenta);
+    color: var(--magenta);
+  }
+
+  /* ── LOADING BANNER ── */
+  .loading-banner {
+    margin-top: 40px;
+    border: 1px dashed rgba(0,255,245,0.2);
+    padding: 18px 28px;
+    display: flex; align-items: center; gap: 16px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 3px;
+    color: rgba(0,255,245,0.35);
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+  }
+  .loading-banner::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--cyan);
+    opacity: 0.3;
+    animation: loadPulse 2s ease-in-out infinite;
+  }
+  @keyframes loadPulse {
+    0%,100% { opacity: 0.15; }
+    50% { opacity: 0.5; }
+  }
+  .loading-dots span {
+    animation: dotFade 1.4s infinite;
+    opacity: 0;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotFade {
+    0%,80%,100% { opacity: 0; }
+    40% { opacity: 1; }
+  }
+
+  /* ── PROJECTS ── */
+  #projects { background: var(--darker); }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 28px;
+  }
+
+  .project-card {
+    border: 1px solid rgba(0,255,245,0.12);
+    background: rgba(2,8,16,0.8);
+    padding: 32px;
+    position: relative;
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+  .project-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .project-card:hover::after { transform: scaleX(1); }
+  .project-card:hover {
+    border-color: rgba(0,255,245,0.3);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px rgba(0,255,245,0.05);
+  }
+
+  .project-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem; font-weight: 700;
+    color: rgba(0,255,245,0.3);
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+
+  .project-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem; font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .project-desc {
+    font-size: 0.92rem; line-height: 1.7;
+    color: rgba(200,232,240,0.6);
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  .project-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+
+  .project-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 1px;
+    padding: 4px 10px;
+    background: rgba(0,255,245,0.08);
+    border: 1px solid rgba(0,255,245,0.2);
+    color: var(--cyan);
+  }
+
+  .project-link {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 2px;
+    color: var(--magenta);
+    text-decoration: none; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: gap 0.2s;
+  }
+  .project-link:hover { gap: 14px; }
+  .project-link::after { content: '→'; }
+
+  /* Featured badge */
+  .project-card.featured {
+    border-color: rgba(255,0,160,0.25);
+    grid-column: span 2;
+  }
+  .project-card.featured .project-title { font-size: 1.3rem; }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 2px;
+    padding: 4px 10px;
+    background: rgba(255,0,160,0.1);
+    border: 1px solid var(--magenta);
+    color: var(--magenta);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience { background: var(--dark); }
+
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+    max-width: 860px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--cyan), var(--magenta), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 52px;
+    padding-left: 28px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.5s ease;
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -38px; top: 6px;
+    width: 12px; height: 12px;
+    background: var(--cyan);
+    box-shadow: var(--glow-cyan);
+    transform: rotate(45deg);
+  }
+
+  .timeline-period {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 2px;
+    color: var(--magenta);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .timeline-role {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.05rem; font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .timeline-company {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--cyan);
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+
+  .timeline-bullets {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .timeline-bullets li {
+    font-size: 0.92rem; line-height: 1.6;
+    color: rgba(200,232,240,0.65);
+    padding-left: 16px;
+    position: relative;
+    font-weight: 300;
+  }
+  .timeline-bullets li::before {
+    content: '//';
+    position: absolute; left: 0;
+    color: rgba(0,255,245,0.4);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--darker);
+    text-align: center;
+  }
+
+  .contact-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .contact-status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 3px;
+    color: #00ff88;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    background: #00ff88;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.5); }
+    50% { box-shadow: 0 0 0 8px rgba(0,255,136,0); }
+  }
+
+  .contact-text {
+    font-size: 1.05rem; line-height: 1.8;
+    color: rgba(200,232,240,0.65);
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .contact-links {
+    display: flex; flex-wrap: wrap;
+    justify-content: center; gap: 16px;
+    margin-bottom: 64px;
+  }
+
+  .contact-link {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 2px;
+    color: rgba(200,232,240,0.6);
+    text-decoration: none; text-transform: uppercase;
+    padding: 14px 24px;
+    border: 1px solid rgba(200,232,240,0.15);
+    transition: all 0.25s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .contact-link:hover {
+    color: var(--cyan);
+    border-color: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 24px 48px;
+    border-top: 1px solid rgba(0,255,245,0.08);
+    display: flex; justify-content: space-between; align-items: center;
+    position: relative; z-index: 2;
+  }
+
+  .footer-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 2px;
+    color: rgba(200,232,240,0.25);
+  }
+
+  .footer-text span { color: var(--cyan); }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── SCAN LINE HERO ACCENT ── */
+  .scan-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0.3;
+    animation: scanDown 6s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes scanDown {
+    0% { top: 0; }
+    100% { top: 100%; }
+  }
+
+  /* ── HEX PATTERN ACCENT ── */
+  .hex-bg {
+    position: absolute;
+    right: -100px; top: 50%;
+    transform: translateY(-50%);
+    width: 500px; height: 500px;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0-2l26-15V17L28 2 2 17v32l26 15z' fill='%2300fff5'/%3E%3C/svg%3E");
+    background-size: 56px 100px;
+    pointer-events: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { gap: 20px; }
+    section { padding: 80px 24px; }
+    #hero { padding: 120px 24px 60px; }
+    .hero-stats { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .project-card.featured { grid-column: span 1; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">RBM<span>//</span>SEC</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#terminal">Terminal</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="scan-line"></div>
+  <div class="hex-bg"></div>
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-br"></div>
+  <div class="hero-bg-text">SECURE</div>
+
+  <div class="hero-content">
+    <div class="hero-tag">SOC Analyst · Threat Hunter · ICS/SCADA</div>
+
+    <h1 class="hero-name">
+      <span class="first">RAYYAN BAIG</span>
+      <span class="last glitch" data-text="MIRZA">MIRZA</span>
+    </h1>
+
+    <p class="hero-title">// CYBERSECURITY PROFESSIONAL · M.S. CYBERSECURITY</p>
+
+    <div class="terminal-line">
+      <span id="typewriter"></span><span class="terminal-cursor"></span>
+    </div>
+
+    <div class="hero-ctas">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="https://linkedin.com/in/mirzarayyan" target="_blank" class="btn btn-ghost">LinkedIn</a>
+      <a href="https://github.com/mirzatwork?tab=repositories" target="_blank" class="btn btn-ghost">GitHub</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">3+</div>
+      <div class="stat-label">Years SOC Exp</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">85%</div>
+      <div class="stat-label">CyberQuest Score</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Certifications</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">CTF Questions</div>
+      <div class="stat-label"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header reveal">
+    <div class="section-tag" data-num="01">Profile</div>
+    <h2 class="section-title">About <span>Me</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>
+        I'm a <strong>cybersecurity professional</strong> with 3+ years of hands-on SOC and security analyst experience,
+        currently completing my <strong>M.S. in Cybersecurity at Pace University</strong> (Seidenberg School, GPA 3.8).
+      </p>
+      <p>
+        My work spans <strong>SOC operations, threat detection, malware analysis, network forensics, and ICS/SCADA security</strong>.
+        I specialise in identifying attack chains that others miss — whether it's a Netcat null-byte probe, a poisoned ARP table,
+        or a phishing document hiding shellcode inside a VBA macro.
+      </p>
+      <p>
+        I'm also the creator of <strong>@cyberguardianss</strong> — a cybersecurity education brand on Instagram
+        dedicated to making complex security concepts accessible to the next generation of defenders.
+      </p>
+    </div>
+    <div class="reveal">
+      <div class="section-tag" data-num="" style="margin-bottom:16px;">Certifications</div>
+      <div class="cert-grid">
+        <div class="cert-item">CompTIA Security+</div>
+        <div class="cert-item">EC-Council EHE</div>
+        <div class="cert-item">Cisco Jr. CyberOps</div>
+        <div class="cert-item">Google Cybersecurity</div>
+        <div class="cert-item">Varonis AI Security</div>
+        <div class="cert-item">M.S. Cybersecurity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header reveal">
+    <div class="section-tag" data-num="02">Arsenal</div>
+    <h2 class="section-title">Skills &amp; <span>Tools</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <span class="skill-card-icon">⚡</span>
+      <div class="skill-card-title">SIEM & Detection</div>
+      <div class="skill-tags">
+        <span class="tag">Splunk</span>
+        <span class="tag">ManageEngine Log360</span>
+        <span class="tag">OSSEC</span>
+        <span class="tag">Snort</span>
+        <span class="tag">Suricata</span>
+        <span class="tag">Tripwire</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-card-icon">🔬</span>
+      <div class="skill-card-title">Malware Analysis</div>
+      <div class="skill-tags">
+        <span class="tag">Ghidra</span>
+        <span class="tag">REMnux</span>
+        <span class="tag">ANY.RUN</span>
+        <span class="tag">Volatility</span>
+        <span class="tag">Static Analysis</span>
+        <span class="tag">Dynamic Analysis</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-card-icon">🌐</span>
+      <div class="skill-card-title">Network Forensics</div>
+      <div class="skill-tags">
+        <span class="tag">Wireshark</span>
+        <span class="tag">Nmap</span>
+        <span class="tag">EtherNet/IP</span>
+        <span class="tag">TCP/IP</span>
+        <span class="tag">ARP Analysis</span>
+        <span class="tag">Python Scapy</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-card-icon">🏭</span>
+      <div class="skill-card-title">ICS / OT Security</div>
+      <div class="skill-tags">
+        <span class="tag">SCADA</span>
+        <span class="tag">PLC Forensics</span>
+        <span class="tag">Modbus</span>
+        <span class="tag">Allen-Bradley</span>
+        <span class="tag">HMI Analysis</span>
+        <span class="tag">MITRE ATT&CK ICS</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-card-icon">☁️</span>
+      <div class="skill-card-title">Cloud & IAM</div>
+      <div class="skill-tags">
+        <span class="tag">AWS IAM</span>
+        <span class="tag">S3</span>
+        <span class="tag">CloudTrail</span>
+        <span class="tag">MFA Enforcement</span>
+        <span class="tag">Least Privilege</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-card-icon">🛡️</span>
+      <div class="skill-card-title">Frameworks</div>
+      <div class="skill-tags">
+        <span class="tag">MITRE ATT&CK</span>
+        <span class="tag">NIST CSF</span>
+        <span class="tag">Kill Chain</span>
+        <span class="tag">OSINT</span>
+        <span class="tag">Threat Intel</span>
+        <span class="tag">IR/DFIR</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-banner reveal">
+    <span>⬡</span>
+    <span>More skills loading</span>
+    <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header reveal">
+    <div class="section-tag" data-num="03">Portfolio</div>
+    <h2 class="section-title">Featured <span>Projects</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid">
+
+    <div class="project-card featured reveal">
+      <div class="badge">★ Featured · Competition</div>
+      <div class="project-num">// 01</div>
+      <div class="project-title">CyberQuest 2026 — ICS/SCADA Network Forensics</div>
+      <div class="project-desc">
+        Full attack chain reconstruction across 6 PCAP files, with all 29 questions answered using raw Python struct/socket parsing — no tshark shortcuts.
+        Documented the complete intrusion lifecycle: port scan → SSH pivot → EtherNet/IP PLC analysis → ARP MitM via Ettercap → network restoration.
+        Achieved 85% — top performer.
+      </div>
+      <div class="project-tags">
+        <span class="project-tag">Python</span>
+        <span class="project-tag">Wireshark</span>
+        <span class="project-tag">EtherNet/IP</span>
+        <span class="project-tag">ARP Spoofing</span>
+        <span class="project-tag">SCADA</span>
+        <span class="project-tag">Allen-Bradley PLC</span>
+        <span class="project-tag">SSH Tunneling</span>
+      </div>
+      <a href="https://github.com/mirzatwork?tab=repositories" target="_blank" class="project-link">View on GitHub</a>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-num">// 02</div>
+      <div class="project-title">Open-Source IDS Research — CYB 623</div>
+      <div class="project-desc">
+        Hands-on deployment and testing of Tripwire, Snort, Suricata, and OSSEC in Docker-based virtual environments.
+        Simulated Nmap SYN scans, file integrity violations, brute-force login attempts, and privilege escalation events to validate each tool's detection capabilities.
+      </div>
+      <div class="project-tags">
+        <span class="project-tag">Tripwire</span>
+        <span class="project-tag">Snort</span>
+        <span class="project-tag">Suricata</span>
+        <span class="project-tag">OSSEC</span>
+        <span class="project-tag">Docker</span>
+      </div>
+      <a href="https://github.com/mirzatwork?tab=repositories" target="_blank" class="project-link">View on GitHub</a>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-num">// 03</div>
+      <div class="project-title">AWS IAM — Multi-Department Access Control</div>
+      <div class="project-desc">
+        Designed and implemented an IAM architecture for a four-department organisation on the AWS Free Tier.
+        Configured 12 users, 4 groups, custom S3 bucket policies, organisation-wide Force-MFA enforcement, and CloudTrail audit logging.
+      </div>
+      <div class="project-tags">
+        <span class="project-tag">AWS IAM</span>
+        <span class="project-tag">S3</span>
+        <span class="project-tag">CloudTrail</span>
+        <span class="project-tag">Least Privilege</span>
+        <span class="project-tag">JSON Policies</span>
+      </div>
+      <a href="https://github.com/mirzatwork?tab=repositories" target="_blank" class="project-link">View on GitHub</a>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-num">// 04</div>
+      <div class="project-title">Malware Analysis — REMnux Static Analysis Series</div>
+      <div class="project-desc">
+        Episode 2 of the @cyberguardianss malware analysis series. Performed static analysis on a malicious Word document
+        using REMnux — extracted VBA macros, identified shellcode staging behaviour, and documented indicators of compromise with full MITRE ATT&amp;CK mapping.
+      </div>
+      <div class="project-tags">
+        <span class="project-tag">REMnux</span>
+        <span class="project-tag">Ghidra</span>
+        <span class="project-tag">VBA Macros</span>
+        <span class="project-tag">MITRE ATT&CK</span>
+        <span class="project-tag">IOC Extraction</span>
+      </div>
+      <a href="https://linkedin.com/in/mirzarayyan" target="_blank" class="project-link">View Write-Up</a>
+    </div>
+
+  </div>
+
+  <div class="loading-banner reveal">
+    <span>⬡</span>
+    <span>More projects loading</span>
+    <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header reveal">
+    <div class="section-tag" data-num="04">History</div>
+    <h2 class="section-title">Work <span>Experience</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-period">Ongoing</div>
+      <div class="timeline-role">Content Creator &amp; Security Educator</div>
+      <div class="timeline-company">@cyberguardianss — Instagram</div>
+      <ul class="timeline-bullets">
+        <li>Produce a weekly "Cyber Week in Review" carousel series covering the latest threat intelligence and industry news</li>
+        <li>Run an ongoing malware analysis episode series documenting real-world sample investigations with full methodology breakdowns</li>
+        <li>Build a community of aspiring defenders through accessible, structured security storytelling aimed at beginners</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-period">Previous</div>
+      <div class="timeline-role">SOC Analyst</div>
+      <div class="timeline-company">Fandom LLC.</div>
+      <ul class="timeline-bullets">
+        <li>Monitored and triaged security events across SIEM platforms including Splunk and ManageEngine Log360</li>
+        <li>Conducted threat hunting and incident investigations across endpoint, network, and cloud telemetry</li>
+        <li>Developed detection rules and tuned alert thresholds to reduce false positive rates</li>
+        <li>Performed malware analysis using Ghidra, REMnux, Volatility, and the ANY.RUN sandbox</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-period">Previous</div>
+      <div class="timeline-role">Cybersecurity Analyst</div>
+      <div class="timeline-company">Fandom LLC.</div>
+      <ul class="timeline-bullets">
+        <li>Administered the ManageEngine suite: Endpoint Central, PAM360, AD Manager Plus, and Vulnerability Manager Plus</li>
+        <li>Performed vulnerability assessments and coordinated remediation efforts across the enterprise environment</li>
+        <li>Supported IAM workflows including user provisioning, access reviews, and privilege management</li>
+        <li>Assisted with compliance reporting and security documentation for client environments</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- GAMES HUB -->
+<section id="terminal" style="background:var(--dark); padding:100px 48px;">
+
+  <div class="section-header reveal">
+    <div class="section-tag" data-num="05">Interactive Labs</div>
+    <h2 class="section-title">Cyber <span>Games</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p class="reveal" style="font-family:'Share Tech Mono',monospace; font-size:0.78rem; color:rgba(200,232,240,0.4); letter-spacing:2px; margin-bottom:40px;">
+    // TWO REAL-WORLD CYBERSECURITY SIMULATIONS. PICK YOUR CHALLENGE.
+  </p>
+
+  <!-- TAB SWITCHER -->
+  <div class="reveal" style="display:flex; gap:0; margin-bottom:40px; max-width:860px; border:1px solid rgba(0,255,245,0.15);">
+    <button id="tab-ctf" onclick="switchGame('ctf')" style="
+      flex:1; padding:16px; font-family:'Share Tech Mono',monospace;
+      font-size:0.75rem; letter-spacing:2px; text-transform:uppercase;
+      background:rgba(0,255,245,0.08); color:var(--cyan);
+      border:none; border-right:1px solid rgba(0,255,245,0.15);
+      cursor:pointer; transition:all 0.2s;
+    ">⬡ &nbsp;01 // Terminal CTF</button>
+    <button id="tab-siem" onclick="switchGame('siem')" style="
+      flex:1; padding:16px; font-family:'Share Tech Mono',monospace;
+      font-size:0.75rem; letter-spacing:2px; text-transform:uppercase;
+      background:transparent; color:rgba(200,232,240,0.4);
+      border:none; cursor:pointer; transition:all 0.2s;
+    ">⬡ &nbsp;02 // SIEM Analyst</button>
+  </div>
+
+  <!-- ══ GAME 1: TERMINAL CTF ══ -->
+  <div id="game-ctf" style="max-width:860px;">
+    <p style="font-family:'Share Tech Mono',monospace; font-size:0.75rem; color:rgba(200,232,240,0.4); letter-spacing:2px; margin-bottom:24px;">
+      AN ICS/SCADA NETWORK HAS BEEN COMPROMISED. INVESTIGATE THE ATTACK CHAIN AND CAPTURE THE FLAG.
+    </p>
+    <div id="ctf-hud" style="display:flex; gap:32px; margin-bottom:16px; font-family:'Share Tech Mono',monospace; font-size:0.7rem; letter-spacing:2px; flex-wrap:wrap;">
+      <span>STAGE: <span id="hud-stage" style="color:var(--cyan)">RECON</span></span>
+      <span>SCORE: <span id="hud-score" style="color:var(--cyan)">0</span> pts</span>
+      <span>HINTS: <span id="hud-hints" style="color:var(--magenta)">3</span> remaining</span>
+      <span id="hud-flag" style="color:#00ff88; display:none;">✓ FLAG CAPTURED</span>
+    </div>
+    <div id="ctf-terminal" style="background:#010508; border:1px solid rgba(0,255,245,0.2); font-family:'Share Tech Mono',monospace; font-size:0.82rem; overflow:hidden;">
+      <div style="background:rgba(0,255,245,0.06); border-bottom:1px solid rgba(0,255,245,0.1); padding:10px 16px; display:flex; align-items:center; gap:10px;">
+        <span style="width:10px;height:10px;background:#ff5f57;border-radius:50%;display:inline-block;"></span>
+        <span style="width:10px;height:10px;background:#febc2e;border-radius:50%;display:inline-block;"></span>
+        <span style="width:10px;height:10px;background:#28c840;border-radius:50%;display:inline-block;"></span>
+        <span style="color:rgba(200,232,240,0.3); font-size:0.7rem; margin-left:8px; letter-spacing:2px;">analyst@rbm-ctf:~$</span>
+      </div>
+      <div id="ctf-output" style="height:360px; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:6px; scroll-behavior:smooth;"></div>
+      <div style="border-top:1px solid rgba(0,255,245,0.1); padding:12px 20px; display:flex; align-items:center; gap:10px;">
+        <span style="color:var(--magenta); font-size:0.8rem;">analyst@rbm-ctf:~$</span>
+        <input id="ctf-input" type="text" autocomplete="off" spellcheck="false" placeholder="type a command..."
+          style="flex:1; background:transparent; border:none; outline:none; font-family:'Share Tech Mono',monospace; font-size:0.82rem; color:var(--cyan); letter-spacing:1px; cursor:text;">
+        <span style="color:rgba(200,232,240,0.3); font-size:0.65rem; letter-spacing:1px;">[ENTER]</span>
+      </div>
+    </div>
+    <div id="ctf-chips" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;"></div>
+  </div>
+
+  <!-- ══ GAME 2: SIEM ANALYST ══ -->
+  <div id="game-siem" style="max-width:1100px; display:none;">
+    <p style="font-family:'Share Tech Mono',monospace; font-size:0.75rem; color:rgba(200,232,240,0.4); letter-spacing:2px; margin-bottom:24px;">
+      YOU ARE THE ON-CALL SOC ANALYST. A WAVE OF ALERTS JUST FIRED. TRIAGE EACH ONE — TRUE POSITIVE, FALSE POSITIVE, OR ESCALATE?
+    </p>
+
+    <!-- SIEM HUD -->
+    <div style="display:flex; gap:32px; margin-bottom:20px; font-family:'Share Tech Mono',monospace; font-size:0.7rem; letter-spacing:2px; flex-wrap:wrap; align-items:center;">
+      <span>ALERTS: <span id="siem-remaining" style="color:var(--cyan)">10</span> remaining</span>
+      <span>TP: <span id="siem-tp" style="color:#00ff88">0</span></span>
+      <span>FP: <span id="siem-fp" style="color:var(--magenta)">0</span></span>
+      <span>ESCALATED: <span id="siem-esc" style="color:#f5ff00">0</span></span>
+      <span>ACCURACY: <span id="siem-acc" style="color:var(--cyan)">—</span></span>
+      <button id="siem-restart" onclick="siemRestart()" style="display:none; font-family:'Share Tech Mono',monospace; font-size:0.65rem; letter-spacing:2px; padding:6px 14px; background:transparent; border:1px solid rgba(0,255,245,0.3); color:var(--cyan); cursor:pointer;">↺ RESTART</button>
+    </div>
+
+    <!-- SIEM LAYOUT: alert queue + detail pane -->
+    <div style="display:grid; grid-template-columns:340px 1fr; gap:20px; align-items:start;">
+
+      <!-- Alert queue -->
+      <div style="border:1px solid rgba(0,255,245,0.15); background:#010508; overflow:hidden;">
+        <div style="background:rgba(0,255,245,0.06); border-bottom:1px solid rgba(0,255,245,0.1); padding:10px 16px; font-family:'Share Tech Mono',monospace; font-size:0.68rem; letter-spacing:2px; color:rgba(200,232,240,0.5);">
+          ALERT QUEUE — LIVE FEED
+        </div>
+        <div id="siem-queue" style="height:420px; overflow-y:auto;"></div>
+      </div>
+
+      <!-- Detail pane -->
+      <div id="siem-detail-pane" style="border:1px solid rgba(0,255,245,0.15); background:#010508; min-height:420px; display:flex; flex-direction:column;">
+        <div style="background:rgba(0,255,245,0.06); border-bottom:1px solid rgba(0,255,245,0.1); padding:10px 16px; font-family:'Share Tech Mono',monospace; font-size:0.68rem; letter-spacing:2px; color:rgba(200,232,240,0.5);">
+          ALERT DETAIL // SELECT AN ALERT TO INVESTIGATE
+        </div>
+        <div id="siem-detail" style="padding:24px; flex:1; font-family:'Share Tech Mono',monospace; font-size:0.78rem; display:flex; align-items:center; justify-content:center; color:rgba(200,232,240,0.25); letter-spacing:2px;">
+          ← SELECT AN ALERT FROM THE QUEUE
+        </div>
+      </div>
+    </div>
+
+    <!-- Result toast -->
+    <div id="siem-toast" style="display:none; margin-top:20px; padding:16px 24px; border:1px solid; font-family:'Share Tech Mono',monospace; font-size:0.8rem; letter-spacing:1px;"></div>
+
+    <!-- Final scorecard -->
+    <div id="siem-scorecard" style="display:none; margin-top:24px; border:1px solid rgba(0,255,245,0.2); padding:32px; background:rgba(0,255,245,0.03);">
+    </div>
+  </div>
+
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-header reveal">
+      <div class="section-tag" data-num="06" style="justify-content:center;">Transmission</div>
+      <h2 class="section-title">Get In <span>Touch</span></h2>
+      <div class="section-line" style="margin:16px auto 0;"></div>
+    </div>
+
+    <div class="contact-status reveal">
+      <div class="status-dot"></div>
+      Available for SOC · IR · Compliance · DFIR roles
+    </div>
+
+    <p class="contact-text reveal">
+      Open to full-time opportunities in SOC Analysis, Threat Detection, IR/DFIR, and Compliance.
+      Also available for freelance security consulting via Upwork.
+    </p>
+
+    <div class="contact-links reveal">
+      <a href="https://linkedin.com/in/mirzarayyan" target="_blank" class="contact-link">
+        <span>⬡</span> LinkedIn
+      </a>
+      <a href="https://github.com/mirzatwork?tab=repositories" target="_blank" class="contact-link">
+        <span>⬡</span> GitHub
+      </a>
+      <a href="mirzatwork@gmail.com" class="contact-link">
+        <span>⬡</span> Email
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-text">© 2026 <span>Rayyan Baig Mirza</span> // All systems nominal</div>
+  <div class="footer-text">Built with <span>raw HTML/CSS/JS</span> · No frameworks · No shortcuts</div>
+</footer>
+
+<script>
+  // ── CURSOR ──
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('cursor-trail');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      trail.style.left = e.clientX + 'px';
+      trail.style.top = e.clientY + 'px';
+    }, 80);
+  });
+
+  // ── TYPEWRITER ──
+  const lines = [
+    'Defending networks. Hunting threats.',
+    'Turning packet captures into attack stories.',
+    'SOC · DFIR · ICS/SCADA · Malware Analysis',
+    'Available for hire.'
+  ];
+  let li = 0, ci = 0, deleting = false;
+  const tw = document.getElementById('typewriter');
+
+  function type() {
+    const current = lines[li];
+    if (!deleting) {
+      tw.textContent = current.slice(0, ++ci);
+      if (ci === current.length) {
+        deleting = true;
+        setTimeout(type, 2200);
+        return;
+      }
+    } else {
+      tw.textContent = current.slice(0, --ci);
+      if (ci === 0) {
+        deleting = false;
+        li = (li + 1) % lines.length;
+      }
+    }
+    setTimeout(type, deleting ? 40 : 75);
+  }
+  setTimeout(type, 800);
+
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal, .timeline-item').forEach(el => observer.observe(el));
+
+  // ── STAGGER REVEAL CARDS ──
+  document.querySelectorAll('.skill-card, .project-card, .cert-item').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.07) + 's';
+  });
+
+  // ══════════════════════════════════════════════
+  // CTF TERMINAL GAME ENGINE
+  // ══════════════════════════════════════════════
+  (() => {
+    const output  = document.getElementById('ctf-output');
+    const input   = document.getElementById('ctf-input');
+    const chips   = document.getElementById('ctf-chips');
+    const hudStage = document.getElementById('hud-stage');
+    const hudScore = document.getElementById('hud-score');
+    const hudHints = document.getElementById('hud-hints');
+    const hudFlag  = document.getElementById('hud-flag');
+
+    if (!output) return;
+
+    // ── GAME STATE ──
+    const state = {
+      stage: 0,         // 0=recon 1=access 2=pivot 3=forensics 4=flag
+      score: 0,
+      hints: 3,
+      history: [],
+      histIdx: -1,
+      flags: {
+        scannedNet: false,
+        readLogs:   false,
+        crackedHash: false,
+        readPcap:   false,
+        submitted:  false,
+      },
+      fs: {                   // fake filesystem
+        '/':              { type:'dir',  children:['home','var','etc','tmp'] },
+        '/home':          { type:'dir',  children:['analyst'] },
+        '/home/analyst':  { type:'dir',  children:['notes.txt','suspects.txt'] },
+        '/var':           { type:'dir',  children:['log'] },
+        '/var/log':       { type:'dir',  children:['auth.log','syslog'] },
+        '/etc':           { type:'dir',  children:['passwd','shadow'] },
+        '/tmp':           { type:'dir',  children:['capture.pcap','hash.txt'] },
+        '/home/analyst/notes.txt': {
+          type:'file',
+          content:`== INCIDENT NOTES ==\nDate: 2026-04-30\nSuspect IP: 10.1.10.33\nTarget: 10.1.10.130 (PLC)\nTool used: Ettercap\n\nCheck /var/log/auth.log for brute-force attempts.\nCheck /tmp/capture.pcap for ARP anomalies.\nA hash was left behind in /tmp/hash.txt.`
+        },
+        '/home/analyst/suspects.txt': {
+          type:'file',
+          content:`SUSPECT LIST\n------------\n10.1.10.33  — attacker pivot (Linux, OpenSSH 5.2)\n172.31.255.28 — external actor (Mac OS X)\n54:52:55:53:54:1f — Ettercap VM (VirtualBox OUI)`
+        },
+        '/var/log/auth.log': {
+          type:'file',
+          content:`Apr 30 03:12:01 sshd[4421]: Failed password for root from 10.1.10.33 port 2200\nApr 30 03:12:04 sshd[4421]: Failed password for root from 10.1.10.33 port 2200\nApr 30 03:12:07 sshd[4421]: Failed password for root from 10.1.10.33 port 2200\nApr 30 03:12:09 sshd[4421]: Accepted password for analyst from 10.1.10.33 port 2200\n[!] 3 failed attempts then success — BRUTE FORCE CONFIRMED`,
+          reveal: 'readLogs'
+        },
+        '/var/log/syslog': {
+          type:'file',
+          content:`Apr 30 03:24:50 kernel: ARP: arp_rcv — packet from unknown source\nApr 30 03:24:50 watchdog: PRIMARY PORT TIMEOUT — ML1100\nApr 30 03:24:55 watchdog: PRIMARY PORT TIMEOUT — ML1100 (repeat)\n[!] Watchdog fired — HMI lost PLC heartbeat. ARP poisoning in progress.`
+        },
+        '/etc/passwd': {
+          type:'file',
+          content:`root:x:0:0:root:/root:/bin/bash\nanalyst:x:1000:1000::/home/analyst:/bin/bash\nfmeyer:x:1001:1001::/home/fmeyer:/bin/bash\nguest:x:1002:1002::/home/guest:/bin/sh`
+        },
+        '/etc/shadow': {
+          type:'file',
+          content:`[PERMISSION DENIED] — root access required.\n[!] Hint: there's a crackable hash in /tmp/hash.txt`
+        },
+        '/tmp/hash.txt': {
+          type:'file',
+          content:`MD5 hash found on attacker's pivot machine:\n5f4dcc3b5aa765d61d8327deb882cf99\n\n[!] Run: crack 5f4dcc3b5aa765d61d8327deb882cf99`,
+          reveal: null
+        },
+        '/tmp/capture.pcap': {
+          type:'file',
+          content:`[Binary PCAP — use: analyse capture.pcap]\n\nFile size: 2.4 MB\nPackets:   20,796\nFirst pkt: 2026-01-31 15:20:01\nLast pkt:  2026-01-31 15:52:12`,
+          reveal: null
+        },
+      },
+      cwd: '/home/analyst',
+    };
+
+    // ── STAGES ──
+    const stages = ['RECON','ACCESS','PIVOT','FORENSICS','COMPLETE'];
+
+    function setStage(n) {
+      state.stage = n;
+      hudStage.textContent = stages[n] || 'COMPLETE';
+    }
+    function addScore(n) {
+      state.score += n;
+      hudScore.textContent = state.score;
+    }
+
+    // ── OUTPUT HELPERS ──
+    function line(text, color='#c8e8f0', delay=0) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.style.cssText = `color:${color}; line-height:1.6; white-space:pre-wrap; word-break:break-all;`;
+        el.textContent = text;
+        output.appendChild(el);
+        output.scrollTop = output.scrollHeight;
+      }, delay);
+    }
+
+    function banner(text, color='var(--cyan)') {
+      line('', color);
+      line('  ' + '─'.repeat(Math.min(text.length + 4, 60)), color);
+      line('  ' + text, color);
+      line('  ' + '─'.repeat(Math.min(text.length + 4, 60)), color);
+      line('', color);
+    }
+
+    function echo(cmd) {
+      const el = document.createElement('div');
+      el.style.cssText = 'color:rgba(200,232,240,0.5); line-height:1.6; margin-top:8px;';
+      el.textContent = `analyst@rbm-ctf:~$ ${cmd}`;
+      output.appendChild(el);
+    }
+
+    function err(msg) { line('[ERROR] ' + msg, '#ff4444'); }
+    function ok(msg)  { line('[OK]    ' + msg, '#00ff88'); }
+    function warn(msg){ line('[WARN]  ' + msg, 'var(--magenta)'); }
+    function info(msg){ line('[INFO]  ' + msg, 'var(--cyan)'); }
+
+    // ── CHIP BUTTONS ──
+    function setChips(cmds) {
+      chips.innerHTML = '';
+      cmds.forEach(cmd => {
+        const b = document.createElement('button');
+        b.textContent = cmd;
+        b.style.cssText = `
+          font-family:'Share Tech Mono',monospace; font-size:0.68rem;
+          letter-spacing:1px; padding:6px 14px; cursor:pointer;
+          background:transparent; border:1px solid rgba(0,255,245,0.2);
+          color:rgba(0,255,245,0.5); transition:all 0.2s;
+        `;
+        b.onmouseenter = () => { b.style.borderColor='var(--cyan)'; b.style.color='var(--cyan)'; };
+        b.onmouseleave = () => { b.style.borderColor='rgba(0,255,245,0.2)'; b.style.color='rgba(0,255,245,0.5)'; };
+        b.onclick = () => { input.value = cmd; input.focus(); processCmd(cmd); input.value = ''; };
+        chips.appendChild(b);
+      });
+    }
+
+    // ── RESOLVE PATH ──
+    function resolvePath(p) {
+      if (!p || p === '~') return '/home/analyst';
+      if (p.startsWith('/')) return p.replace(/\/+$/, '') || '/';
+      const base = state.cwd.split('/').filter(Boolean);
+      p.split('/').forEach(seg => {
+        if (seg === '..') base.pop();
+        else if (seg !== '.') base.push(seg);
+      });
+      return '/' + base.join('/');
+    }
+
+    // ── COMMANDS ──
+    const commands = {
+
+      help() {
+        line('');
+        line('╔══════════════════════════════════════════╗', 'var(--cyan)');
+        line('║      RBM-CTF TERMINAL  v2.6.1            ║', 'var(--cyan)');
+        line('║  An ICS/SCADA network was compromised.   ║', 'var(--cyan)');
+        line('║  Investigate. Pivot. Find the flag.      ║', 'var(--cyan)');
+        line('╚══════════════════════════════════════════╝', 'var(--cyan)');
+        line('');
+        line('AVAILABLE COMMANDS:', 'var(--magenta)');
+        const cmds = [
+          ['help',              'Show this menu'],
+          ['scan [target]',     'Run a network scan (e.g. scan 10.1.10.0/24)'],
+          ['ls [path]',         'List directory contents'],
+          ['cd [path]',         'Change directory'],
+          ['cat [file]',        'Read a file'],
+          ['whoami',            'Show current user'],
+          ['ifconfig',          'Show network interfaces'],
+          ['netstat',           'Show active connections'],
+          ['crack [hash]',      'Attempt to crack an MD5 hash'],
+          ['analyse [file]',    'Deep-analyse a PCAP file'],
+          ['submit [flag]',     'Submit your final flag'],
+          ['hint',              'Use a hint (3 remaining)'],
+          ['clear',             'Clear the terminal'],
+          ['score',             'Show current score'],
+        ];
+        cmds.forEach(([c, d]) => {
+          line(`  ${c.padEnd(25)} ${d}`, '#c8e8f0');
+        });
+        line('');
+        info('START HERE: read your notes → cat notes.txt');
+        line('');
+        setChips(['scan 10.1.10.0/24','cat notes.txt','ls','ifconfig','hint']);
+      },
+
+      clear() {
+        output.innerHTML = '';
+      },
+
+      score() {
+        line('');
+        line(`  Score  : ${state.score} pts`, 'var(--cyan)');
+        line(`  Stage  : ${stages[state.stage]}`, 'var(--cyan)');
+        line(`  Hints  : ${state.hints} remaining`, 'var(--magenta)');
+        line('');
+      },
+
+      whoami() {
+        info('analyst  [uid=1000, groups=analyst,sudo]');
+        info('Hostname: rbm-ctf-node  |  OS: Ubuntu 20.04 LTS');
+      },
+
+      ifconfig() {
+        line('');
+        line('eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>', 'var(--cyan)');
+        line('      inet 10.1.10.50  netmask 255.255.255.0  broadcast 10.1.10.255');
+        line('      ether 08:00:27:aa:bb:cc  txqueuelen 1000');
+        line('');
+        line('lo:   flags=73<UP,LOOPBACK,RUNNING>');
+        line('      inet 127.0.0.1  netmask 255.0.0.0');
+        line('');
+        if (!state.flags.scannedNet) {
+          warn('No hosts discovered yet. Try: scan 10.1.10.0/24');
+        }
+        setChips(['scan 10.1.10.0/24','netstat','ls']);
+      },
+
+      netstat() {
+        line('');
+        line('Active Internet connections:', 'var(--cyan)');
+        line('Proto  Local Address          Foreign Address        State');
+        line('tcp    10.1.10.50:22          10.1.10.33:40683       ESTABLISHED');
+        line('tcp    10.1.10.50:44818       10.1.10.20:51234       TIME_WAIT');
+        line('tcp    10.1.10.50:80          10.1.10.20:34511       ESTABLISHED');
+        line('');
+        warn('Suspicious: port 44818 = EtherNet/IP. Someone was talking to this PLC.');
+        if (state.stage < 1) {
+          addScore(10);
+          ok('+10 pts — Suspicious connection identified');
+        }
+        setChips(['scan 10.1.10.0/24','cat notes.txt','ls /tmp']);
+      },
+
+      scan(args) {
+        const target = args[0];
+        if (!target) { err('Usage: scan [target] — e.g. scan 10.1.10.0/24'); return; }
+        line('');
+        line(`Starting scan of ${target}...`, 'var(--cyan)');
+
+        const hosts = [
+          { ip:'10.1.10.13',  ports:'80',              role:'Grandstream VoIP Phone' },
+          { ip:'10.1.10.15',  ports:'80',              role:'Grandstream VoIP Phone' },
+          { ip:'10.1.10.20',  ports:'80, 3389',        role:'PeakHMI (Windows HMI)' },
+          { ip:'10.1.10.33',  ports:'22, 2200',        role:'Linux pivot (SSH server)' },
+          { ip:'10.1.10.130', ports:'80, 44818',       role:'Allen-Bradley PLC (MicroLogix)' },
+        ];
+
+        hosts.forEach((h, i) => {
+          setTimeout(() => {
+            line(`  ${h.ip.padEnd(16)} OPEN: ${h.ports.padEnd(16)} [${h.role}]`, '#00ff88');
+            if (i === hosts.length - 1) {
+              line('');
+              warn('ANOMALY: 10.1.10.33 has port 2200 open — non-standard SSH port');
+              warn('ANOMALY: 10.1.10.130:44818 — EtherNet/IP (industrial protocol!)');
+              line('');
+              if (!state.flags.scannedNet) {
+                state.flags.scannedNet = true;
+                addScore(30);
+                ok('+30 pts — Network reconnaissance complete');
+                if (state.stage < 1) setStage(1);
+              }
+              info('Next: check /tmp for evidence → ls /tmp');
+              setChips(['ls /tmp','cat notes.txt','cat suspects.txt','netstat']);
+            }
+          }, i * 280 + 200);
+        });
+      },
+
+      ls(args) {
+        const path = resolvePath(args[0] || state.cwd);
+        const node = state.fs[path];
+        if (!node) { err(`ls: cannot access '${path}': No such file or directory`); return; }
+        if (node.type === 'file') { info(path.split('/').pop()); return; }
+        line('');
+        line(`${path}/`, 'var(--cyan)');
+        (node.children || []).forEach(c => {
+          const childPath = path === '/' ? '/' + c : path + '/' + c;
+          const child = state.fs[childPath];
+          const isDir = child && child.type === 'dir';
+          line(`  ${isDir ? c + '/' : c}`, isDir ? 'var(--cyan)' : '#c8e8f0');
+        });
+        line('');
+        setChips(['cat notes.txt','cat suspects.txt','ls /tmp','ls /var/log','cd /tmp']);
+      },
+
+      cd(args) {
+        const path = resolvePath(args[0] || '/home/analyst');
+        const node = state.fs[path];
+        if (!node) { err(`cd: ${args[0]}: No such file or directory`); return; }
+        if (node.type === 'file') { err(`cd: ${args[0]}: Not a directory`); return; }
+        state.cwd = path;
+        info(`Changed to ${path}`);
+      },
+
+      cat(args) {
+        if (!args[0]) { err('Usage: cat [file]'); return; }
+        const path = resolvePath(args[0]);
+        const node = state.fs[path];
+        if (!node) { err(`cat: ${args[0]}: No such file or directory`); return; }
+        if (node.type === 'dir') { err(`cat: ${args[0]}: Is a directory`); return; }
+
+        line('');
+        line('─'.repeat(50), 'rgba(0,255,245,0.2)');
+        node.content.split('\n').forEach(l => {
+          const col = l.startsWith('[!]') ? 'var(--magenta)' : '#c8e8f0';
+          line(l, col);
+        });
+        line('─'.repeat(50), 'rgba(0,255,245,0.2)');
+        line('');
+
+        if (node.reveal && !state.flags[node.reveal]) {
+          state.flags[node.reveal] = true;
+          addScore(20);
+          ok(`+20 pts — Evidence discovered`);
+        }
+
+        // stage progression hints
+        if (path === '/home/analyst/notes.txt' && state.stage < 1) {
+          info('Tip: investigate /var/log/auth.log and /tmp/ for more clues');
+          setChips(['cat /var/log/auth.log','ls /tmp','cat suspects.txt','scan 10.1.10.0/24']);
+        } else if (path === '/var/log/auth.log') {
+          if (state.stage < 2) setStage(2);
+          warn('Brute-force confirmed! Now check /tmp/hash.txt and /tmp/capture.pcap');
+          setChips(['cat /tmp/hash.txt','analyse capture.pcap','cat /tmp/capture.pcap']);
+        } else if (path === '/tmp/hash.txt') {
+          info('Found a hash! Use: crack 5f4dcc3b5aa765d61d8327deb882cf99');
+          setChips(['crack 5f4dcc3b5aa765d61d8327deb882cf99','analyse capture.pcap']);
+        }
+      },
+
+      crack(args) {
+        const hash = args[0];
+        if (!hash) { err('Usage: crack [md5-hash]'); return; }
+        if (hash !== '5f4dcc3b5aa765d61d8327deb882cf99') {
+          err('Hash not in wordlist. Try the one from /tmp/hash.txt');
+          return;
+        }
+        line('');
+        line('Running hashcat wordlist attack...', 'var(--cyan)');
+        const frames = ['[▓░░░░░░░░░]','[▓▓▓░░░░░░░]','[▓▓▓▓▓▓░░░░]','[▓▓▓▓▓▓▓▓▓▓]'];
+        frames.forEach((f, i) => {
+          setTimeout(() => {
+            line(f + ` ${i * 25}%`, 'var(--cyan)');
+            if (i === frames.length - 1) {
+              setTimeout(() => {
+                line('');
+                ok('HASH CRACKED!');
+                line('  Hash   : 5f4dcc3b5aa765d61d8327deb882cf99', 'var(--cyan)');
+                line('  Result : password', '#00ff88');
+                line('  Type   : MD5', 'var(--cyan)');
+                line('');
+                warn('Default credential "password" used on pivot machine — textbook weakness');
+                if (!state.flags.crackedHash) {
+                  state.flags.crackedHash = true;
+                  addScore(40);
+                  ok('+40 pts — Hash cracked');
+                  if (state.stage < 3) setStage(3);
+                }
+                info('One more step: analyse the PCAP → analyse capture.pcap');
+                setChips(['analyse capture.pcap','cat suspects.txt','score']);
+              }, 400);
+            }
+          }, i * 350 + 200);
+        });
+      },
+
+      analyse(args) {
+        const file = args[0];
+        if (!file) { err('Usage: analyse [pcap-file]'); return; }
+        if (!file.includes('capture') && !file.includes('pcap')) {
+          err('Only PCAP files supported. Try: analyse capture.pcap');
+          return;
+        }
+        line('');
+        line('Loading PCAP engine...', 'var(--cyan)');
+        const findings = [
+          { t:300,  msg:'Packets analysed: 20,796', col:'var(--cyan)' },
+          { t:600,  msg:'ARP packets: 17,892  (!!ANOMALY!!)', col:'var(--magenta)' },
+          { t:900,  msg:'Attacker MAC: 54:52:55:53:54:1f  [OUI: Oracle VirtualBox]', col:'var(--magenta)' },
+          { t:1100, msg:'First spoofed ARP: Packet 2879 — claiming IP 10.1.10.130', col:'var(--magenta)' },
+          { t:1300, msg:'Watchdog alarm fired @ Pkt 2879+  (HMI lost PLC heartbeat)', col:'#ff4444' },
+          { t:1500, msg:'Restoration: Pkt 20796 — real PLC gratuitous ARP overwrites cache', col:'#00ff88' },
+          { t:1700, msg:'Attack method: ARP SPOOFING via Ettercap (Man-in-the-Middle)', col:'var(--magenta)' },
+        ];
+        findings.forEach(f => {
+          setTimeout(() => line('  → ' + f.msg, f.col), f.t);
+        });
+        setTimeout(() => {
+          line('');
+          banner('ANALYSIS COMPLETE — ATTACK CHAIN RECONSTRUCTED', '#00ff88');
+          if (!state.flags.readPcap) {
+            state.flags.readPcap = true;
+            addScore(50);
+            ok('+50 pts — Full attack chain identified');
+            if (state.stage < 4) setStage(4);
+          }
+          line('');
+          line('You have uncovered the full attack. The flag is hidden in the attacker\'s tool signature.', 'var(--cyan)');
+          line('The Ettercap VM\'s MAC OUI + the cracked password + the attack method.', 'var(--cyan)');
+          line('');
+          line('FORMAT: CTF{<OUI_no_colons>_<cracked_password>_<attack_method>}', 'var(--magenta)');
+          line('Example format: CTF{545255_xxxx_xxxxxxx}', 'rgba(200,232,240,0.4)');
+          line('');
+          info('Submit with: submit CTF{...}');
+          setChips(['submit CTF{545255_password_arpspoofing}','hint','score']);
+        }, 2000);
+      },
+
+      submit(args) {
+        const flag = (args[0] || '').trim().toLowerCase();
+        const correct = 'ctf{545255_password_arpspoofing}';
+
+        if (state.flags.submitted) {
+          ok('Flag already captured! Final score: ' + state.score + ' pts');
+          return;
+        }
+        if (!flag.startsWith('ctf{')) {
+          err('Invalid flag format. Use: CTF{...}');
+          info('Hint: think about the attacker\'s MAC OUI, cracked password, and attack method');
+          return;
+        }
+        if (flag === correct) {
+          state.flags.submitted = true;
+          addScore(100);
+          hudFlag.style.display = 'inline';
+          line('');
+          line('▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', '#00ff88');
+          line('');
+          line('  ██████╗ ██╗    ██╗███╗   ██╗███████╗██████╗ ', '#00ff88');
+          line('  ██╔══██╗██║    ██║████╗  ██║██╔════╝██╔══██╗', '#00ff88');
+          line('  ██████╔╝██║ █╗ ██║██╔██╗ ██║█████╗  ██║  ██║', '#00ff88');
+          line('  ██╔═══╝ ██║███╗██║██║╚██╗██║██╔══╝  ██║  ██║', '#00ff88');
+          line('  ██║     ╚███╔███╔╝██║ ╚████║███████╗██████╔╝', '#00ff88');
+          line('  ╚═╝      ╚══╝╚══╝ ╚═╝  ╚═══╝╚══════╝╚═════╝ ', '#00ff88');
+          line('');
+          ok(`FLAG ACCEPTED: ${flag.toUpperCase()}`);
+          ok(`FINAL SCORE: ${state.score} pts`);
+          line('');
+          line('  You reconstructed the full ICS/SCADA attack chain:', 'var(--cyan)');
+          line('  ✓ Network recon (nmap-style scan)', 'var(--cyan)');
+          line('  ✓ Auth log analysis (brute-force identified)', 'var(--cyan)');
+          line('  ✓ Hash cracking (MD5 → "password")', 'var(--cyan)');
+          line('  ✓ PCAP forensics (ARP MitM / Ettercap)', 'var(--cyan)');
+          line('');
+          line('  This mirrors a real CyberQuest 2026 scenario.', 'rgba(200,232,240,0.5)');
+          line('  Rayyan solved the actual version for 85% — top performer.', 'rgba(200,232,240,0.5)');
+          line('');
+          line('▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', '#00ff88');
+          setChips(['score','clear','help']);
+        } else {
+          err('Incorrect flag. Keep investigating.');
+          warn('Tip: OUI has no colons, password is the cracked hash result, attack method is two words joined');
+          setChips(['hint','analyse capture.pcap','score']);
+        }
+      },
+
+      hint() {
+        if (state.hints <= 0) {
+          err('No hints remaining. You\'ve got this — re-read your notes.');
+          return;
+        }
+        state.hints--;
+        hudHints.textContent = state.hints;
+
+        const hints = [
+          [0, 'Start with: cat notes.txt — your analyst notes map the whole investigation.'],
+          [1, 'Read /var/log/auth.log to confirm the brute-force, then crack the hash in /tmp/hash.txt.'],
+          [2, 'The flag format is CTF{OUI_password_attackmethod} — OUI = first 3 bytes of the Ettercap MAC with no colons (545255), password = what the hash cracked to, method = arpspoofing.'],
+        ];
+
+        const h = hints[3 - state.hints - 1] || hints[2];
+        line('');
+        line(`[HINT ${3 - state.hints}] ${h[1]}`, 'var(--magenta)');
+        line('');
+      },
+    };
+
+    // ── INPUT HANDLER ──
+    function processCmd(raw) {
+      const trimmed = raw.trim();
+      if (!trimmed) return;
+
+      state.history.unshift(trimmed);
+      state.histIdx = -1;
+
+      echo(trimmed);
+
+      const parts = trimmed.split(/\s+/);
+      const cmd   = parts[0].toLowerCase();
+      const args  = parts.slice(1);
+
+      if (commands[cmd]) {
+        commands[cmd](args);
+      } else {
+        err(`Command not found: ${cmd}  —  type 'help' for available commands`);
+      }
+    }
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const val = input.value;
+        input.value = '';
+        processCmd(val);
+      }
+      if (e.key === 'ArrowUp') {
+        state.histIdx = Math.min(state.histIdx + 1, state.history.length - 1);
+        input.value = state.history[state.histIdx] || '';
+        e.preventDefault();
+      }
+      if (e.key === 'ArrowDown') {
+        state.histIdx = Math.max(state.histIdx - 1, -1);
+        input.value = state.histIdx >= 0 ? state.history[state.histIdx] : '';
+        e.preventDefault();
+      }
+    });
+
+    // Click anywhere on terminal to focus input
+    document.getElementById('ctf-terminal').addEventListener('click', () => input.focus());
+
+    // ── BOOT SEQUENCE ──
+    const boot = [
+      { t:0,    msg:'Initialising RBM-CTF environment...', col:'var(--cyan)' },
+      { t:350,  msg:'Loading filesystem...         [OK]',  col:'#00ff88' },
+      { t:600,  msg:'Mounting evidence volume...   [OK]',  col:'#00ff88' },
+      { t:850,  msg:'Starting network interface... [OK]',  col:'#00ff88' },
+      { t:1100, msg:'SCENARIO: An ICS/SCADA network has been compromised.', col:'var(--magenta)' },
+      { t:1300, msg:'Your mission: investigate the attack, crack the hash, analyse the PCAP,', col:'#c8e8f0' },
+      { t:1450, msg:'reconstruct the attack chain, and capture the flag.', col:'#c8e8f0' },
+      { t:1700, msg:'Type  help  to begin.', col:'var(--cyan)' },
+      { t:1900, msg:'', col:'#c8e8f0' },
+    ];
+    boot.forEach(b => setTimeout(() => line(b.msg, b.col), b.t));
+    setTimeout(() => {
+      setChips(['help','whoami','ifconfig','scan 10.1.10.0/24']);
+      input.focus();
+    }, 2000);
+
+  })(); // end CTF engine
+
+  // ══════════════════════════════════════════════
+  // TAB SWITCHER
+  // ══════════════════════════════════════════════
+  function switchGame(game) {
+    const ctf  = document.getElementById('game-ctf');
+    const siem = document.getElementById('game-siem');
+    const tCtf  = document.getElementById('tab-ctf');
+    const tSiem = document.getElementById('tab-siem');
+    if (game === 'ctf') {
+      ctf.style.display  = 'block';
+      siem.style.display = 'none';
+      tCtf.style.background  = 'rgba(0,255,245,0.08)';
+      tCtf.style.color       = 'var(--cyan)';
+      tSiem.style.background = 'transparent';
+      tSiem.style.color      = 'rgba(200,232,240,0.4)';
+    } else {
+      ctf.style.display  = 'none';
+      siem.style.display = 'block';
+      tSiem.style.background = 'rgba(0,255,245,0.08)';
+      tSiem.style.color      = 'var(--cyan)';
+      tCtf.style.background  = 'transparent';
+      tCtf.style.color       = 'rgba(200,232,240,0.4)';
+      if (!siemState.started) siemInit();
+    }
+  }
+  window.switchGame = switchGame;
+
+  // ══════════════════════════════════════════════
+  // SIEM ANALYST GAME ENGINE
+  // ══════════════════════════════════════════════
+  const siemAlerts = [
+    {
+      id:'A001', severity:'CRITICAL', rule:'Brute Force — SSH',
+      source:'185.220.101.47', dest:'10.1.10.33:22',
+      time:'2026-04-30 03:12:01', count:847,
+      detail:{
+        description:'847 failed SSH login attempts in 4 minutes from a single external IP, followed by a successful authentication.',
+        logs:['Apr 30 03:08:14 sshd: Failed password for root from 185.220.101.47','Apr 30 03:08:16 sshd: Failed password for root from 185.220.101.47','... (845 more failed attempts) ...','Apr 30 03:12:01 sshd: Accepted password for analyst from 185.220.101.47'],
+        ioc:'Known Tor exit node. 185.220.101.47 listed in AbuseIPDB (confidence: 97%).',
+        mitre:'T1110.001 — Brute Force: Password Guessing',
+      },
+      answer:'escalate',
+      explanation:'ESCALATE — A successful login after 847 brute-force attempts from a Tor exit node is a confirmed compromise. This requires immediate IR response, not just a TP log.',
+    },
+    {
+      id:'A002', severity:'LOW', rule:'Port Scan Detected',
+      source:'10.1.10.50', dest:'10.1.10.0/24',
+      time:'2026-04-30 09:00:02', count:1,
+      detail:{
+        description:'SYN scan detected from an internal IP to the entire /24 subnet. 102 SYN packets sent in 4 seconds.',
+        logs:['09:00:02 SNORT [1:1000001] SYN scan from 10.1.10.50','09:00:02 Ports probed: 21,22,23,80,443,3389','09:00:06 Scan completed. 5 hosts responded.'],
+        ioc:'10.1.10.50 = IT Admin workstation. Scheduled vulnerability scan window: 09:00–10:00 daily.',
+        mitre:'T1046 — Network Service Discovery',
+      },
+      answer:'fp',
+      explanation:'FALSE POSITIVE — 10.1.10.50 is the IT admin workstation performing a scheduled daily vulnerability scan within the documented 09:00–10:00 window. This matches expected behaviour exactly.',
+    },
+    {
+      id:'A003', severity:'HIGH', rule:'ARP Spoofing — Possible MitM',
+      source:'54:52:55:53:54:1f', dest:'Broadcast',
+      time:'2026-04-30 15:24:50', count:17746,
+      detail:{
+        description:'17,746 ARP reply packets from a single MAC address claiming to be every IP on the network. A watchdog alarm fired on the PLC shortly after.',
+        logs:['15:24:50 ARP: 10.1.10.130 is at 54:52:55:53:54:1f (SPOOFED)','15:24:50 ARP: 10.1.10.20 is at 54:52:55:53:54:1f (SPOOFED)','15:24:50 WATCHDOG: PRIMARY PORT TIMEOUT — ML1100 PLC','15:24:55 WATCHDOG: PRIMARY PORT TIMEOUT — ML1100 PLC (repeat)'],
+        ioc:'OUI 54:52:55 = Oracle VirtualBox. Ettercap signature. PLC communications severed for 8 minutes.',
+        mitre:'T0830 — Adversary-in-the-Middle (ICS) / T1557.002 — ARP Cache Poisoning',
+      },
+      answer:'escalate',
+      explanation:'ESCALATE — Active ARP MitM against an industrial PLC with confirmed communications disruption. This is an OT security incident requiring immediate ICS-IR response. Critical infrastructure is at risk.',
+    },
+    {
+      id:'A004', severity:'HIGH', rule:'Malware — Suspicious Process Spawn',
+      source:'10.1.10.75', dest:'localhost',
+      time:'2026-04-30 11:43:22', count:1,
+      detail:{
+        description:'Microsoft Word spawned cmd.exe, which then spawned powershell.exe with a Base64-encoded command string.',
+        logs:['WINWORD.EXE → cmd.exe /c powershell.exe -enc JABzAD0ATgBlAHcA...','PowerShell contacted: 203.0.113.44:443 (outbound)','Process exited with code 0'],
+        ioc:'Base64-encoded PowerShell from a Word document is a classic malicious macro pattern. 203.0.113.44 has no business justification.',
+        mitre:'T1566.001 — Phishing: Spearphishing Attachment / T1059.001 — PowerShell',
+      },
+      answer:'escalate',
+      explanation:'ESCALATE — Classic malicious macro execution chain. Word spawning encoded PowerShell with outbound C2 connectivity is a confirmed malware execution event requiring immediate endpoint isolation and IR.',
+    },
+    {
+      id:'A005', severity:'LOW', rule:'Failed Login — RDP',
+      source:'10.1.10.80', dest:'10.1.10.20:3389',
+      time:'2026-04-30 08:32:11', count:3,
+      detail:{
+        description:'3 failed RDP login attempts from an internal workstation within 2 minutes, followed by a successful login.',
+        logs:['08:32:11 RDP: Failed login for jsmith from 10.1.10.80','08:32:43 RDP: Failed login for jsmith from 10.1.10.80','08:33:02 RDP: Successful login for jsmith from 10.1.10.80'],
+        ioc:'10.1.10.80 is assigned to John Smith (HR). 10.1.10.20 is the HMI workstation John uses daily.',
+        mitre:'T1110 — Brute Force',
+      },
+      answer:'fp',
+      explanation:"FALSE POSITIVE — 3 failed attempts from a user's own assigned machine followed by a successful login is consistent with a mistyped password. No escalation is warranted without additional indicators.",
+    },
+    {
+      id:'A006', severity:'HIGH', rule:'Data Exfiltration — Large Upload',
+      source:'10.1.10.33', dest:'45.142.212.100:443',
+      time:'2026-04-30 03:45:00', count:1,
+      detail:{
+        description:'2.4 GB of data transferred outbound to an external IP over HTTPS at 03:45 AM.',
+        logs:['03:45:00 FLOW: 10.1.10.33 → 45.142.212.100:443 | 2.4 GB sent','03:45:00 Duration: 12 minutes','03:45:00 Geo: Romania (AS209588)'],
+        ioc:'45.142.212.100 flagged as C2 in multiple threat intelligence feeds. 10.1.10.33 is the attacker pivot machine. 2.4 GB at 3 AM with no business justification.',
+        mitre:'T1048 — Exfiltration Over Alternative Protocol',
+      },
+      answer:'escalate',
+      explanation:'ESCALATE — 2.4 GB to a known C2 IP from the attacker pivot machine at 3 AM is confirmed exfiltration. Combined with alert A001, this is a multi-stage intrusion in progress.',
+    },
+    {
+      id:'A007', severity:'MEDIUM', rule:'Privilege Escalation — New Sudo User',
+      source:'10.1.10.33', dest:'localhost',
+      time:'2026-04-30 03:50:12', count:1,
+      detail:{
+        description:'A new user "svcbackup" was created and immediately added to the sudo group.',
+        logs:['03:50:12 useradd: new user svcbackup (uid=1003)','03:50:12 usermod: add svcbackup to group sudo','03:50:14 sudo: svcbackup : TTY=pts/1 ; COMMAND=/bin/bash'],
+        ioc:'User created and granted root-equivalent access within 2 seconds at 3:50 AM, from the session linked to the compromised pivot machine.',
+        mitre:'T1136.001 — Create Account: Local Account / T1078 — Valid Accounts',
+      },
+      answer:'escalate',
+      explanation:"ESCALATE — Backdoor account creation at 3:50 AM on the pivot machine, immediately granted sudo and a root shell. This is persistence being established mid-intrusion and requires immediate response.",
+    },
+    {
+      id:'A008', severity:'LOW', rule:'DNS Query — Unusual TLD',
+      source:'10.1.10.90', dest:'8.8.8.8:53',
+      time:'2026-04-30 14:10:05', count:2,
+      detail:{
+        description:'A workstation queried two domains with .xyz TLDs, both of which returned NXDOMAIN.',
+        logs:['14:10:05 DNS query: updates.microsoft-patch.xyz → NXDOMAIN','14:10:06 DNS query: cdn.bootstrap-cdn.xyz → NXDOMAIN'],
+        ioc:'Both queries returned NXDOMAIN — the domains do not exist. No connection was established. 10.1.10.90 = Marketing laptop.',
+        mitre:'T1071.004 — DNS (potential C2 beaconing)',
+      },
+      answer:'tp',
+      explanation:'TRUE POSITIVE — Domain patterns mimicking legitimate software (microsoft-patch.xyz, bootstrap-cdn.xyz) are a classic typosquatting or phishing indicator. Log as a TP and investigate the endpoint, but no active compromise occurred since both domains resolved to NXDOMAIN.',
+    },
+    {
+      id:'A009', severity:'MEDIUM', rule:'Lateral Movement — SMB Admin Share',
+      source:'10.1.10.33', dest:'10.1.10.20',
+      time:'2026-04-30 03:55:00', count:1,
+      detail:{
+        description:'A connection was made to the ADMIN$ share on the HMI workstation from the Linux pivot machine, using pass-the-hash. A rogue service binary was written and installed.',
+        logs:['03:55:00 SMB: 10.1.10.33 → 10.1.10.20 ADMIN$ [WRITE]','03:55:01 SMB: File written: C:\\Windows\\Temp\\svc.exe','03:55:02 SCM: Service installed: svc (C:\\Windows\\Temp\\svc.exe)'],
+        ioc:'A Linux machine connecting to a Windows ADMIN$ share and installing a service is a classic lateral movement technique. svc.exe is not a legitimate Windows binary.',
+        mitre:'T1570 — Lateral Tool Transfer / T1021.002 — SMB/Windows Admin Shares',
+      },
+      answer:'escalate',
+      explanation:"ESCALATE — Pass-the-hash lateral movement from the attacker's Linux pivot to the HMI workstation, deploying a rogue service. This is active attacker movement toward the ICS environment and requires critical escalation.",
+    },
+    {
+      id:'A010', severity:'LOW', rule:'Antivirus — Quarantine Success',
+      source:'10.1.10.55', dest:'localhost',
+      time:'2026-04-30 10:22:00', count:1,
+      detail:{
+        description:'Windows Defender detected and successfully quarantined a malicious file: Trojan:Win32/Emotet.A!ml, before it could execute.',
+        logs:['10:22:00 WD: Threat detected: Trojan:Win32/Emotet.A!ml','10:22:00 WD: File: C:\\Users\\user\\Downloads\\invoice_2026.doc','10:22:00 WD: Action taken: Quarantine — SUCCESS','10:22:00 WD: No execution detected.'],
+        ioc:'Emotet dropper delivered via an email attachment. AV caught it before execution. No network IOCs observed.',
+        mitre:'T1566.001 — Spearphishing Attachment',
+      },
+      answer:'tp',
+      explanation:'TRUE POSITIVE — An Emotet dropper is a real threat and should be logged as a TP. Since AV successfully quarantined it before execution with no network IOCs, full IR escalation is not required — but the user should receive a phishing awareness follow-up and the email source should be investigated.',
+    },
+  ];
+
+  const siemState = { started:false, current:null, remaining:[], score:{tp:0,fp:0,esc:0,correct:0,total:0} };
+  window.siemState = siemState;
+
+  const sevColor = { CRITICAL:'#ff4444', HIGH:'var(--magenta)', MEDIUM:'#f5ff00', LOW:'rgba(200,232,240,0.5)' };
+
+  function siemInit() {
+    siemState.started = true;
+    siemState.remaining = [...siemAlerts];
+    siemState.score = {tp:0,fp:0,esc:0,correct:0,total:0};
+    siemState.current = null;
+    ['siem-scorecard','siem-toast'].forEach(id => document.getElementById(id).style.display='none');
+    document.getElementById('siem-restart').style.display='none';
+    document.getElementById('siem-remaining').textContent = siemAlerts.length;
+    ['siem-tp','siem-fp','siem-esc'].forEach(id => document.getElementById(id).textContent=0);
+    document.getElementById('siem-acc').textContent='—';
+    renderQueue();
+    document.getElementById('siem-detail').innerHTML='<span style="color:rgba(200,232,240,0.25);letter-spacing:2px;font-family:Share Tech Mono,monospace;">← SELECT AN ALERT FROM THE QUEUE</span>';
+  }
+  window.siemInit = siemInit;
+  window.siemRestart = () => siemInit();
+
+  function renderQueue() {
+    const q = document.getElementById('siem-queue');
+    q.innerHTML='';
+    siemState.remaining.forEach(a => {
+      const el = document.createElement('div');
+      el.id='qitem-'+a.id;
+      el.style.cssText='padding:12px 16px;border-bottom:1px solid rgba(0,255,245,0.07);cursor:pointer;transition:background 0.15s;display:flex;flex-direction:column;gap:4px;';
+      el.innerHTML=`
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:Share Tech Mono,monospace;font-size:0.65rem;color:${sevColor[a.severity]};letter-spacing:1px;">${a.severity}</span>
+          <span style="font-family:Share Tech Mono,monospace;font-size:0.6rem;color:rgba(200,232,240,0.3);">${a.id}</span>
+        </div>
+        <div style="font-family:Share Tech Mono,monospace;font-size:0.72rem;color:#c8e8f0;">${a.rule}</div>
+        <div style="font-family:Share Tech Mono,monospace;font-size:0.62rem;color:rgba(200,232,240,0.4);">${a.source} → ${a.dest}</div>
+      `;
+      el.onmouseenter=()=>{ if(siemState.current!==a.id) el.style.background='rgba(0,255,245,0.04)'; };
+      el.onmouseleave=()=>{ if(siemState.current!==a.id) el.style.background='transparent'; };
+      el.onclick=()=>siemSelect(a.id);
+      q.appendChild(el);
+    });
+  }
+
+  function siemSelect(id) {
+    siemState.current=id;
+    const a=siemAlerts.find(x=>x.id===id);
+    if(!a) return;
+    const d=a.detail;
+    document.getElementById('siem-detail').innerHTML=`
+      <div style="display:flex;flex-direction:column;gap:16px;height:100%;padding:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="font-family:Share Tech Mono,monospace;font-size:0.65rem;color:${sevColor[a.severity]};letter-spacing:2px;margin-bottom:4px;">${a.severity} // ${a.id}</div>
+            <div style="font-family:Share Tech Mono,monospace;font-size:0.95rem;color:#fff;letter-spacing:1px;">${a.rule}</div>
+          </div>
+          <div style="font-family:Share Tech Mono,monospace;font-size:0.65rem;color:rgba(200,232,240,0.35);text-align:right;line-height:1.8;">
+            <div>${a.time}</div><div>Count: ${a.count.toLocaleString()}</div>
+          </div>
+        </div>
+        <div style="border-top:1px solid rgba(0,255,245,0.1);padding-top:12px;">
+          <div style="font-family:Share Tech Mono,monospace;color:rgba(200,232,240,0.4);font-size:0.62rem;letter-spacing:2px;margin-bottom:8px;">DESCRIPTION</div>
+          <div style="font-family:Share Tech Mono,monospace;color:#c8e8f0;font-size:0.75rem;line-height:1.7;">${d.description}</div>
+        </div>
+        <div>
+          <div style="font-family:Share Tech Mono,monospace;color:rgba(200,232,240,0.4);font-size:0.62rem;letter-spacing:2px;margin-bottom:8px;">RAW LOGS</div>
+          <div style="background:#020810;border:1px solid rgba(0,255,245,0.1);padding:12px;display:flex;flex-direction:column;gap:4px;">
+            ${d.logs.map(l=>`<div style="font-family:Share Tech Mono,monospace;color:${l.includes('Failed')||l.includes('SPOOF')||l.includes('TIMEOUT')?'var(--magenta)':l.includes('Success')||l.includes('Accepted')?'#00ff88':'rgba(200,232,240,0.65)'};font-size:0.68rem;line-height:1.5;">${l}</div>`).join('')}
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <div style="font-family:Share Tech Mono,monospace;color:rgba(200,232,240,0.4);font-size:0.62rem;letter-spacing:2px;margin-bottom:6px;">IOC / CONTEXT</div>
+            <div style="font-family:Share Tech Mono,monospace;color:var(--magenta);font-size:0.7rem;line-height:1.6;">${d.ioc}</div>
+          </div>
+          <div>
+            <div style="font-family:Share Tech Mono,monospace;color:rgba(200,232,240,0.4);font-size:0.62rem;letter-spacing:2px;margin-bottom:6px;">MITRE ATT&amp;CK</div>
+            <div style="font-family:Share Tech Mono,monospace;color:var(--cyan);font-size:0.7rem;line-height:1.6;">${d.mitre}</div>
+          </div>
+        </div>
+        <div style="margin-top:auto;padding-top:16px;border-top:1px solid rgba(0,255,245,0.1);">
+          <div style="font-family:Share Tech Mono,monospace;color:rgba(200,232,240,0.4);font-size:0.62rem;letter-spacing:2px;margin-bottom:12px;">YOUR VERDICT</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button onclick="siemVerdict('tp')" style="flex:1;min-width:100px;padding:12px;font-family:Share Tech Mono,monospace;font-size:0.7rem;letter-spacing:2px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.3);color:#00ff88;cursor:pointer;transition:all 0.2s;" onmouseenter="this.style.background='rgba(0,255,136,0.2)'" onmouseleave="this.style.background='rgba(0,255,136,0.08)'">✓ TRUE POSITIVE</button>
+            <button onclick="siemVerdict('fp')" style="flex:1;min-width:100px;padding:12px;font-family:Share Tech Mono,monospace;font-size:0.7rem;letter-spacing:2px;background:rgba(255,0,160,0.08);border:1px solid rgba(255,0,160,0.3);color:var(--magenta);cursor:pointer;transition:all 0.2s;" onmouseenter="this.style.background='rgba(255,0,160,0.2)'" onmouseleave="this.style.background='rgba(255,0,160,0.08)'">✗ FALSE POSITIVE</button>
+            <button onclick="siemVerdict('escalate')" style="flex:1;min-width:100px;padding:12px;font-family:Share Tech Mono,monospace;font-size:0.7rem;letter-spacing:2px;background:rgba(245,255,0,0.08);border:1px solid rgba(245,255,0,0.3);color:#f5ff00;cursor:pointer;transition:all 0.2s;" onmouseenter="this.style.background='rgba(245,255,0,0.2)'" onmouseleave="this.style.background='rgba(245,255,0,0.08)'">⚠ ESCALATE</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll('#siem-queue > div').forEach(el=>el.style.background='transparent');
+    const qi=document.getElementById('qitem-'+id);
+    if(qi) qi.style.background='rgba(0,255,245,0.06)';
+  }
+  window.siemSelect=siemSelect;
+
+  function siemVerdict(verdict) {
+    const a=siemAlerts.find(x=>x.id===siemState.current);
+    if(!a) return;
+    const correct=verdict===a.answer;
+    siemState.score.total++;
+    if(correct) siemState.score.correct++;
+    siemState.score[verdict==='escalate'?'esc':verdict]++;
+    ['tp','fp','esc'].forEach(k=>document.getElementById('siem-'+k).textContent=siemState.score[k]);
+    document.getElementById('siem-acc').textContent=Math.round(siemState.score.correct/siemState.score.total*100)+'%';
+    const toast=document.getElementById('siem-toast');
+    const labels={tp:'TRUE POSITIVE',fp:'FALSE POSITIVE',escalate:'ESCALATE'};
+    toast.style.cssText=`display:block;margin-top:20px;padding:16px 24px;border:1px solid ${correct?'#00ff88':'var(--magenta)'};background:${correct?'rgba(0,255,136,0.06)':'rgba(255,0,160,0.06)'};font-family:Share Tech Mono,monospace;font-size:0.78rem;letter-spacing:1px;color:#c8e8f0;`;
+    toast.innerHTML=correct
+      ?`<span style="color:#00ff88;font-size:0.9rem;">✓ CORRECT</span><br><br>${a.explanation}`
+      :`<span style="color:var(--magenta);font-size:0.9rem;">✗ INCORRECT</span> — Correct answer: <span style="color:var(--cyan);">${labels[a.answer]}</span><br><br>${a.explanation}`;
+    siemState.remaining=siemState.remaining.filter(x=>x.id!==a.id);
+    document.getElementById('siem-remaining').textContent=siemState.remaining.length;
+    const qi=document.getElementById('qitem-'+a.id);
+    if(qi){qi.style.opacity='0.3';qi.style.pointerEvents='none';qi.style.textDecoration='line-through';}
+    siemState.current=null;
+    if(siemState.remaining.length>0) setTimeout(()=>siemSelect(siemState.remaining[0].id),1200);
+    else setTimeout(()=>siemShowScorecard(),1400);
+  }
+  window.siemVerdict=siemVerdict;
+
+  function siemShowScorecard(){
+    const s=siemState.score;
+    const pct=Math.round(s.correct/s.total*100);
+    const [grade,gc]=pct>=90?['TIER 1 ANALYST','#00ff88']:pct>=70?['TIER 2 ANALYST','var(--cyan)']:pct>=50?['JUNIOR ANALYST','#f5ff00']:['NEEDS TRAINING','var(--magenta)'];
+    const sc=document.getElementById('siem-scorecard');
+    sc.style.display='block';
+    sc.innerHTML=`
+      <div style="font-family:Orbitron,monospace;font-size:0.7rem;letter-spacing:3px;color:rgba(200,232,240,0.4);margin-bottom:20px;">SESSION COMPLETE — ANALYST PERFORMANCE REPORT</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px;margin-bottom:24px;">
+        ${[['ACCURACY',pct+'%',pct>=70?'#00ff88':'var(--magenta)'],['CORRECT',s.correct+' / '+s.total,'var(--cyan)'],['TRUE POS',s.tp,'#00ff88'],['FALSE POS',s.fp,'var(--magenta)'],['ESCALATED',s.esc,'#f5ff00']].map(([l,v,c])=>`
+          <div style="border:1px solid rgba(0,255,245,0.15);padding:16px;text-align:center;">
+            <div style="font-family:Orbitron,monospace;font-size:1.4rem;font-weight:900;color:${c};text-shadow:0 0 10px ${c};">${v}</div>
+            <div style="font-family:Share Tech Mono,monospace;font-size:0.6rem;letter-spacing:2px;color:rgba(200,232,240,0.4);margin-top:6px;">${l}</div>
+          </div>`).join('')}
+      </div>
+      <div style="border:1px solid ${gc};padding:14px 24px;display:inline-flex;align-items:center;gap:16px;margin-bottom:20px;">
+        <span style="font-family:Orbitron,monospace;font-size:1.05rem;font-weight:900;color:${gc};text-shadow:0 0 10px ${gc};">⬡ ${grade}</span>
+      </div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.72rem;line-height:1.8;color:rgba(200,232,240,0.5);">
+        ${pct>=90?'Outstanding. You correctly triaged every critical incident and avoided alert fatigue. You would be a strong Tier 1/2 SOC analyst.':pct>=70?'Good performance. Review the alerts you missed — especially the ICS/OT incidents, which require a different escalation mindset.':'Keep practising. SOC triage requires pattern recognition across log types. Focus on correlating alerts across the same source IP.'}
+      </div>
+    `;
+    document.getElementById('siem-restart').style.display='inline-block';
+    document.getElementById('siem-detail').innerHTML='<span style="color:rgba(200,232,240,0.25);letter-spacing:2px;font-family:Share Tech Mono,monospace;padding:24px;display:block;">SESSION COMPLETE — SEE SCORECARD BELOW</span>';
+    document.getElementById('siem-toast').style.display='none';
+  }
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current
+        ? 'var(--cyan)' : '';
+    });
+  });
+</script>
+</body>
+</html>
